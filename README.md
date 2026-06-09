@@ -51,3 +51,5 @@ hello/
 ```
 
 > 第三次示範：這一行是用來重拍教材截圖的。
+
+Dark mode screenshot demo D
