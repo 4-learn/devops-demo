@@ -49,11 +49,17 @@ jobs:
             echo "::warning::CONFIG_REPO_TOKEN 未設，略過更新 Config Repo"
             exit 0
           fi
+          
+          # 1. 確保複製並進入正確的資料夾
           git clone https://x-access-token:${CONFIG_REPO_TOKEN}@github.com/allenlee564/devops-config2.git
           cd devops-config2
-          sed -i "s|image: .*|image: ghcr.io/allenlee564/devops-demo2:${{ github.sha }}|g" k8s/deployment.yaml
+          
+          # 2. 精準取代：不管前方有多少空格，只要匹配到 image: 加上任何字串，通通換掉！
+          sed -i "s|image:.*|image: ghcr.io/allenlee564/devops-demo2:${{ github.sha }}|g" k8s/deployment.yaml
+          
+          # 3. 推送變更
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add k8s/deployment.yaml
-          git commit -m "chore: force update image to ${{ github.sha }}" || echo "no change"
-          git push
+          git commit -m "chore: release version v4.0-allen (${{ github.sha }})"
+          git push origin main
